@@ -4,20 +4,19 @@ import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
 //  Project imports
-
+import Authentication from './modules/auth';
+import Home from './modules/home';
 
 const Routes = (props) => {
 
     return (
         <Switch>
-            <Route exact path="/signin" component={} />
-            <Route exact path="/signup" component={} />
-            <Route path="/" component={} />
+            <Route path="/auth" component={Authentication} />
+            <Route exact path="/" component={Home} />
         </Switch>
     );
 }
 
-
 const mapStateToProps = ({ auth }) => auth;
 
-export default withRouter(connect(mapStateToProps, null))(Routes));
+export default withRouter(connect(mapStateToProps, null)(Routes));
