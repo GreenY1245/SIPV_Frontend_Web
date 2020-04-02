@@ -22,12 +22,12 @@ const theme = createMuiTheme({
 const styles = theme => ({
 
     root: {
-        width: '100vw',
+        width: '100%',
         height: '100px',
 
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-evenly',
+        justifyContent: 'space-between',
     },
     innerLinks: {
         display: 'flex',
