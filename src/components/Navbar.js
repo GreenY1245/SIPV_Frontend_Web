@@ -9,15 +9,15 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 
 const theme = createMuiTheme({
     palette: {
-      primary: {
-        main: '#0C7C59',
-        light: '#0F996D'
-      },
-      secondary: {
-        main: '#D64933',
-      },
+        primary: {
+            main: '#0C7C59',
+            light: '#0F996D'
+        },
+            secondary: {
+            main: '#D64933',
+        },
     }
-  });
+});
 
 const styles = theme => ({
 
@@ -83,7 +83,7 @@ const Navbar = (props) => {
             <IconButton color="primary">
                 <ThemeProvider theme={theme}>
                     <Mms fontSize="large" color="primary" />
-                    <Typography className={props.classes.boldText} variant="h5">Messenger</Typography>
+                    <Typography className={props.classes.boldText} variant="h5">[NAME PENDING]</Typography>
                 </ThemeProvider>
             </IconButton>
 
