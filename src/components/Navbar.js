@@ -81,8 +81,10 @@ const Navbar = (props) => {
     return (
         <div className={props.classes.root}>
             <IconButton color="primary">
-                <Mms />
-                <Typography variant="h5">Messngr</Typography>
+                <ThemeProvider theme={theme}>
+                    <Mms fontSize="large" color="primary" />
+                    <Typography className={props.classes.boldText} variant="h5">Messenger</Typography>
+                </ThemeProvider>
             </IconButton>
 
             <div className={props.classes.innerLinks}>
