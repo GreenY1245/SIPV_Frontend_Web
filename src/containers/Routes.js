@@ -17,6 +17,6 @@ const Routes = (props) => {
     );
 }
 
-const mapStateToProps = ({ auth }) => auth;
+//const mapStateToProps = ({ auth }) => auth;
 
-export default withRouter(connect(mapStateToProps, null)(Routes));
+export default withRouter(connect(null, null)(Routes));
