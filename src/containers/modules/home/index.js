@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
 import 'typeface-roboto';
-import { Container, Typography, Button, Link } from '@material-ui/core';
+import { Container, Typography, Button, Link, Card, CardContent, Divider, Grid } from '@material-ui/core';
 import Navbar from '../../../components/Navbar';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core';
-import HomepageImage from '../../../assets//home-webapp-app-image.png';
+import HomepageImage from '../../../assets/home-webapp-app-image.png';
+import BCIcon from '../../../assets/bc64.png';
 
 const theme = createMuiTheme({
     palette: {
@@ -14,10 +15,21 @@ const theme = createMuiTheme({
             main: '#0C7C59',
             light: '#0F996D'
         },
-            secondary: {
+        secondary: {
             main: '#D64933',
         },
     }
+});
+
+const footerTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#BAC1B8',
+    },
+    secondary: {
+      main: '#2B303A'
+    }
+  }
 });
 
 
@@ -32,6 +44,7 @@ const styles = {
   },
   container: {
     display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -58,6 +71,54 @@ const styles = {
   title: {
     color: '#0C7C59'
   },
+  bottomMainContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    marginTop: '200px',
+    marginBottom: '100px',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  bottomContentCard: {
+    display: 'flex',
+    backgroundColor: '#2B303A',
+    padding: '10px',
+    marginTop: '50px',
+    width: '70%',
+    color: '#BAC1B8',
+  },
+  cardContentPrice: {},
+  cardContentDescription: {},
+  footer: {
+    width: '100%',
+    backgroundColor: '#0C7C59',
+    paddingTop: '50px',
+    paddingBottom: '50px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  footerIcon: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  footerRightContent: {
+    display: 'flex',
+    width: '70%',
+  },
+  footerLeftContent: {
+    display: 'flex',
+    width: '30%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column',
+  },
+  footerContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+  }
 };
 
 const links = [
@@ -92,8 +153,72 @@ const Home = (props) => {
 
             <img className={props.classes.topMainImage} src={HomepageImage} alt="homepage laptop and phone" />
           </div>
+
+          <div className={props.classes.bottomMainContent}>
+            <Typography className={classNames([props.classes.boldText, props.classes.title])} variant="h2">Completely free</Typography>
+            <Typography className={classNames([props.classes.boldText, props.classes.title])} variant="h2">for everyone to use</Typography>
+            
+            <Card className={props.classes.bottomContentCard}>
+              <CardContent className={props.classes.cardContentPrice}>
+                <Typography variant="h2">0€</Typography>
+                <Typography variant="caption">For everyone</Typography>
+              </CardContent>
+              <Divider orientation="vertical" flexItem variant="middle" style={{ backgroundColor: '#BAC1B8' }} />
+              <CardContent className={props.classes.cardContentDescription}>
+                <Typography variant="h5">BadCommunicator is free for everyone. Download it here, or go to the app store for more download options</Typography>
+                <ThemeProvider theme={theme}>
+                  <Button size="large" style={{ marginTop: '5px', paddingTop: '10px', paddingBottom: '10px' }} color="secondary" variant="contained">Try BadCommunicator for free</Button>
+                </ThemeProvider>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </Container>
+
+      <div className={props.classes.footer}>
+        <Container maxWidth="lg" className={props.classes.footerContainer}>
+
+          <div className={props.classes.footerLeftContent}>
+            <div className={props.classes.footerIcon}>
+              <img src={BCIcon} alt="AppIcon" />
+              <Typography className={classNames([props.classes.titleText])} variant="h6">BadCommunicator</Typography>
+            </div>
+            <div style={{ paddingTop: '40px' }}>
+              <Typography variant="body1"><b>Login</b> or <b>Register</b></Typography>
+            </div>
+            <div style={{ paddingTop: '20px' }}>
+              <Typography variant="caption"><b>Privacy</b> &amp; <b>Terms</b></Typography>
+            </div>
+            <div>
+              <Typography variant="caption">© 2020 Zamudniki</Typography>
+            </div>
+          </div>
+
+          <ThemeProvider theme={footerTheme}>
+            <div className={props.classes.footerRightContent}>
+              <Grid container justify={"flex-end"} spacing={2}>
+                <Grid item xs={12} lg={3}>
+                  <Typography variant="h6" color="primary">Product</Typography>
+
+                  <Typography style={{ paddingTop: '20px' }} variant="body1" color="primary">What's new</Typography>
+                  <Typography style={{ paddingTop: '5px' }} variant="body1" color="primary">GitHub</Typography>
+                </Grid>
+                <Grid item xs={12} lg={3}>
+                  <Typography variant="h6" color="primary">Company</Typography>
+
+                  <Typography style={{ paddingTop: '20px' }} variant="body1" color="primary">About</Typography>
+                </Grid>
+                <Grid item xs={12} lg={3}>
+                  <Typography variant="h6" color="primary">Resources</Typography>
+
+                  <Typography style={{ paddingTop: '20px' }} variant="body1" color="primary">Contact us</Typography>
+                </Grid>
+              </Grid>
+            </div>
+          </ThemeProvider>
+
+        </Container>
+      </div>
     </div>
   )
 }

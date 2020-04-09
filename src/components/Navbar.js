@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { useLocation } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import { Button, MenuList, MenuItem, Paper, Popper, ClickAwayListener, Grow, IconButton, Typography, ButtonGroup } from '@material-ui/core';
-import { Mms } from '@material-ui/icons';
 import classNames from 'classnames';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import BCIcon from '../assets/bc64.png';
 
 const theme = createMuiTheme({
     palette: {
@@ -86,7 +86,7 @@ const Navbar = (props) => {
         <div className={props.classes.root}>
             <IconButton color="primary">
                 <ThemeProvider theme={theme}>
-                    <Mms fontSize="large" color="primary" />
+                    <img src={BCIcon} alt="AppIcon" />
                     <Typography className={classNames([props.classes.titleText])} variant="h6">BadCommunicator</Typography>
                 </ThemeProvider>
             </IconButton>
