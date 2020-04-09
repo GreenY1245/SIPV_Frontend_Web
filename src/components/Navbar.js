@@ -28,6 +28,10 @@ const styles = theme => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
+        fontFamily: 'Roboto'
+    },
+    titleText: {
+        fontWeight: 500
     },
     innerLinks: {
         display: 'flex',
@@ -40,7 +44,7 @@ const styles = theme => ({
         padding: '7px 15px 7px 15px',
     },
     border: {
-        border: 'solid #2B303A 2px'
+        /*border: 'solid #2B303A 2px'*/
     },
     primaryColor: {
         color: '#2B303A'
@@ -83,7 +87,7 @@ const Navbar = (props) => {
             <IconButton color="primary">
                 <ThemeProvider theme={theme}>
                     <Mms fontSize="large" color="primary" />
-                    <Typography className={props.classes.boldText} variant="h5">[NAME PENDING]</Typography>
+                    <Typography className={classNames([props.classes.titleText])} variant="h6">BadCommunicator</Typography>
                 </ThemeProvider>
             </IconButton>
 

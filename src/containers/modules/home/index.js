@@ -6,6 +6,7 @@ import 'typeface-roboto';
 import { Container, Typography, Button, Link } from '@material-ui/core';
 import Navbar from '../../../components/Navbar';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import HomepageImage from '../../../assets//home-webapp-app-image.png';
 
 const theme = createMuiTheme({
     palette: {
@@ -21,11 +22,13 @@ const theme = createMuiTheme({
 
 
 const styles = {
+
   root: {
     width: '100vw',
     height: '100vh',
     backgroundColor: '#BAC1B8',
-    fontFamily: 'Roboto, roboto'
+    overflowX: 'hidden',
+    fontFamily: 'Roboto, sans-serif'
   },
   container: {
     display: 'flex',
@@ -34,9 +37,16 @@ const styles = {
   },
   topMain: {
     width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  topMainImage: {
+    marginTop: '20px'
   },
   topMainContent: {
-    marginTop: '75px',
+    marginTop: '40px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -67,18 +77,20 @@ const Home = (props) => {
           <div className={props.classes.topMain}>
             <Navbar links={links} />
             <div className={props.classes.topMainContent}>
-              <Typography className={classNames([props.classes.boldText, props.classes.title])} variant="h3">Remote teams</Typography>
-              <Typography className={classNames([props.classes.boldText, props.classes.title])} variant="h3">communicate differently</Typography>
+              <Typography className={classNames([props.classes.boldText, props.classes.title])} variant="h2">Remote teams</Typography>
+              <Typography className={classNames([props.classes.boldText, props.classes.title])} variant="h2">communicate differently</Typography>
               
               <Typography style={{ marginTop: '20px' }} variant="h5">Teams struggle to stay in-sync with chat alone.</Typography>
-              <Typography variant="h5">With <b>[NAME PENDING]</b>, distributed teams have productive,</Typography>
+              <Typography variant="h5">With <b>BadCommunicator</b>, distributed teams have productive,</Typography>
               <Typography variant="h5">asynchronous discussions without the chatter.</Typography>
 
               <ThemeProvider theme={theme}>
-                <Button size="large" style={{ marginTop: '40px', paddingTop: '15px', paddingBottom: '15px' }} color="secondary" variant="contained">Try [NAME PENDING] for free</Button>
-                <Typography variant="subtitle2">[NAME PENDING] is open source! <Link className={props.classes.boldText} href="https://github.com/GreenY1245/SIPV_Frontend_Web">Github</Link></Typography>
+                <Button size="large" style={{ marginTop: '40px', paddingTop: '15px', paddingBottom: '15px', fontWeight: 400 }} color="secondary" variant="contained">Try BadCommunicator for free</Button>
+                <Typography variant="subtitle2">BadCommunicator is open source! <Link className={props.classes.boldText} href="https://github.com/GreenY1245/SIPV_Frontend_Web">Github</Link></Typography>
               </ThemeProvider>
             </div>
+
+            <img className={props.classes.topMainImage} src={HomepageImage} alt="homepage laptop and phone" />
           </div>
         </div>
       </Container>
