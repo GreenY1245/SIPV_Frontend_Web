@@ -48,9 +48,12 @@ const styles = theme => ({
   },
 
   formImageText: {
-    fontFamily: 'Righteous',
-    position: 'absolute',
-    top: '1rem',
+    fontFamily: 'Lato', 
+    fontSize: '1.3em', 
+    textTransform:'uppercase',
+    position: 'relative',
+    top: '40%',
+    letterSpacing: '0.5em',
   },
 
   formDataContainer: {
@@ -76,7 +79,9 @@ const styles = theme => ({
     color: 'white',
     border: 'none',
     backgroundColor: '#2b303a',
-    fontFamily: 'Roboto',
+    fontFamily: 'lato',
+    textTransform: 'uppercase',
+    fontSize: '1em',
   },
 
 });
@@ -96,11 +101,10 @@ const Signup = (props) => {
         <div className={props.classes.formImage}>
           <div className={props.classes.formImageText}>
           <h2>Get Started!</h2>
-          <h3>Sign Up And Start Chatting With Your Friends Today!</h3>
           </div>
         </div>
         <div className={props.classes.formDataContainer}>
-          <h2 style={{textAlign: 'center', textTransform: 'uppercase', color: '#bac18b'}}>Register</h2>
+          <h2 style={{textAlign: 'center', textTransform: 'uppercase', color: '#bac18b', letterSpacing: '0.8em', position: 'relative', top: '1rem'}}>Register</h2>
           <form>
             <input type="text" placeholder='Email' className={props.classes.input}></input>
             <input type="text" placeholder='Username' className={props.classes.input}></input>
@@ -117,7 +121,7 @@ const Signup = (props) => {
       </div>
     </div>
     </>
-  )
+  );
 }
 
 Signup.propTypes = {
