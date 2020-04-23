@@ -7,10 +7,10 @@ export const signIn = (user) => {
     }
 }
 
-export const signInSuccess = (authenticatedUser) => {
+export const signInSuccess = (token) => {
     return {
         type: SIGN_IN_SUCCESS,
-        payload: authenticatedUser
+        payload: token
     }
 }
 

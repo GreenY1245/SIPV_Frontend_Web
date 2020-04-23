@@ -2,8 +2,9 @@ import { SIGN_IN, SIGN_IN_FAILURE, SIGN_IN_SUCCESS, SIGN_OUT, REGISTER, REGISTER
 
 const INIT_STATE = {
     registered: false,
-    authenticatedUser: null,
-    loading: false
+    token: null,
+    loading: false,
+    error: false
 }
 
 export default (state = INIT_STATE, action) => {
@@ -19,21 +20,23 @@ export default (state = INIT_STATE, action) => {
         case SIGN_IN_SUCCESS:
             return {
                 ...state,
-                authenticatedUser: action.payload,
+                token: action.payload,
                 loading: false
             }
 
         case SIGN_IN_FAILURE:
             return {
                 ...state,
-                authenticatedUser: null,
-                loading: false
+                token: null,
+                loading: false,
+                error: true
             }
 
         case SIGN_OUT:
+            localStorage.removeItem("token")
             return {
                 ...state,
-                authenticatedUser: null,
+                token: null,
             }
 
         case REGISTER:
@@ -53,7 +56,8 @@ export default (state = INIT_STATE, action) => {
             return {
                 ...state,
                 registered: false,
-                loading: false
+                loading: false,
+                error: true
             }
 
         default:

@@ -1,4 +1,4 @@
-import { all, fork, put, takeLatest } from 'redux-saga/effects';
+import { all, fork, put, takeLatest, call } from 'redux-saga/effects';
 import axios from 'axios';
 
 import { SIGN_IN, SIGN_IN_SUCCESS, SIGN_IN_FAILURE, REGISTER, REGISTER_SUCCESS, REGISTER_FAILURE } from '../constants/AuthTypes';
@@ -6,15 +6,13 @@ import { signInSuccess, signInFailure, registerSuccess, registerFailure } from '
 
 /**
  * 
- * @param {object} payload - Object containing the email and password of the user  
+ * @param {object} payload - Object containing the username and password of the user  
  */
-function signInRequest({ payload }) {
-
-    return axios.get(`${process.env.REACT_APP_API_BASE}/auth/login`, {
-        params: {
-            email: payload.email,
-            password: payload.password
-        }
+function signInRequest(username, password) {
+    
+    return axios.post(`${process.env.REACT_APP_API_BASE}/authUser`, {
+        username: username,
+        pass: password
     });
 }
 
@@ -25,11 +23,12 @@ function signInRequest({ payload }) {
 function* signIn({ payload }) {
 
     try {
-        const { data, headers } = yield call(signInRequest, payload);
+        const data = yield call(signInRequest, payload.username, payload.password);
+
+        localStorage.setItem("token", JSON.stringify(data));
 
         yield put(signInSuccess({
-            data, 
-            headers
+            data
         }));
 
     } catch(err) {
@@ -41,14 +40,12 @@ function* signIn({ payload }) {
  * 
  * @param {object} payload - Object containing the username, email, and password of the user
  */
-function registerRequest({ payload }) {
+function registerRequest(username, email, password) {
 
-    return axios.post(`${process.env.REACT_APP_API_BASE}/auth/register`, {
-        params: {
-            username: payload.username,
-            email: payload.email,
-            password: payload.password
-        }
+    return axios.post(`${process.env.REACT_APP_API_BASE}/registerUser`, {
+        username: username,
+        email: email,
+        pass: password
     });
 }
 
@@ -59,7 +56,7 @@ function registerRequest({ payload }) {
 function* register({ payload }) {
 
     try {
-        const { data, headers } = yield call(registerRequest, payload);
+        const { data, headers } = yield call(registerRequest, payload.username, payload.email, payload.password);
 
         yield put(registerSuccess({
             data, 

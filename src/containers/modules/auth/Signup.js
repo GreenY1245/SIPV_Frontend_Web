@@ -3,6 +3,10 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import backgroundImage from '../../../assets/background.jpg';
 import formImage from '../../../assets/form-image.jpg';
+import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom'
+
+import { register } from '../../../actions';
 
 const styles = theme => ({
 
