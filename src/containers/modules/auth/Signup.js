@@ -94,6 +94,25 @@ const styles = theme => ({
 
 const Signup = (props) => {
 
+  let history = useHistory();
+
+  const [email, setEmail] = React.useState(null);
+  const [username, setUsername] = React.useState(null);
+  const [password, setPassword] = React.useState(null);
+
+  React.useEffect(() => {
+    if (props.registered) {
+      history.push('/auth?ref=register');
+    }
+  })
+
+  const sendRequest = (event) => {
+    event.preventDefault();
+    if (email && username && password) {
+      props.register({ email, username, password });
+    }
+  }
+
   return (
 
     // navbar
@@ -110,15 +129,15 @@ const Signup = (props) => {
         <div className={props.classes.formDataContainer}>
           <h2 style={{textAlign: 'center', textTransform: 'uppercase', color: '#bac18b', letterSpacing: '0.8em', position: 'relative', top: '1rem'}}>Register</h2>
           <form>
-            <input type="text" placeholder='Email' className={props.classes.input}></input>
-            <input type="text" placeholder='Username' className={props.classes.input}></input>
+            <input onChange={(event) => {setEmail(event.target.value)}} type="text" placeholder='Email' className={props.classes.input}></input>
+            <input onChange={(event) => {setUsername(event.target.value)}} type="text" placeholder='Username' className={props.classes.input}></input>
             <div className={props.classes.passwordContainer}>
-            <input type="password" placeholder='Password' className={props.classes.input}></input>
+            <input onChange={(event) => {setPassword(event.target.value)}} type="password" placeholder='Password' className={props.classes.input}></input>
             <div className={props.classes.showPassButton}>
             </div>
             </div>
             <input type="text" placeholder='Confirm password' className={props.classes.input}></input>
-            <input className={props.classes.button} type="submit" value="Register"></input> 
+            <input onClick={sendRequest} className={props.classes.button} type="submit" value="Register"></input> 
           </form>
         </div>
       </div>
@@ -132,4 +151,15 @@ Signup.propTypes = {
   classes: PropTypes.object,
 }
 
-export default withStyles(styles)(Signup);
+const mapStateToProps = ({ auth }) => {
+  const { registered } = auth;
+  return {
+    registered
+  }
+};
+
+const mapDispatchToProps = {
+  register,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Signup));

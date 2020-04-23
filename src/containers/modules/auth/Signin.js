@@ -10,6 +10,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import '../../../assets/fonts/fonts.css';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom'
+import queryString from 'query-string';
 
 import { signIn } from '../../../actions';
 
@@ -148,12 +149,19 @@ const styles = theme => ({
 const Signin = (props) => {
 
   let history = useHistory();
+  const parsed = queryString.parse(props.location.search);
+
+  const [referrer, setReferrer] = useState(null);
 
   React.useEffect(() => {
     if (props.token !== null && props.token !== undefined) {
       history.push('/main');
     }
-  });
+
+    if (parsed.ref) {
+      setReferrer(parsed.ref);
+    }
+  }, [props.token, parsed.ref, history]);
 
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
@@ -166,7 +174,7 @@ const Signin = (props) => {
 
   const sendRequest = () => {
     if (username && password) {
-      props.signIn({username, password});
+      props.signIn({ username, password });
     }
   }
 
@@ -182,7 +190,11 @@ const Signin = (props) => {
         
         <div className={props.classes.rightContainer}>
           <div className={props.classes.loginFormContainer}>
-            <h1 style={{ color: '#bac1b8', fontFamily: 'Lato', textTransform: 'uppercase',letterSpacing: '0.3em', marginBottom: '5rem' }}>Welcome Back</h1>
+            { referrer === "register" ? (
+              <h1 style={{ color: '#bac1b8', fontFamily: 'Lato', textTransform: 'uppercase',letterSpacing: '0.3em', marginBottom: '5rem' }}>Successfuly registered, you may now sign in</h1>
+            ) : (
+              <h1 style={{ color: '#bac1b8', fontFamily: 'Lato', textTransform: 'uppercase',letterSpacing: '0.3em', marginBottom: '5rem' }}>Welcome Back</h1>
+            ) }
             <form className={props.classes.loginForm}>
               <label className={props.classes.formLabel}>Email address</label>
               <input onChange={(event) => { setUsername(event.target.value) }} className={props.classes.input} type='email'></input>

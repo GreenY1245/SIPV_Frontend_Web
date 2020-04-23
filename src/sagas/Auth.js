@@ -56,11 +56,10 @@ function registerRequest(username, email, password) {
 function* register({ payload }) {
 
     try {
-        const { data, headers } = yield call(registerRequest, payload.username, payload.email, payload.password);
+        const data = yield call(registerRequest, payload.username, payload.email, payload.password);
 
         yield put(registerSuccess({
-            data, 
-            headers
+            data
         }));
 
     } catch(err) {
