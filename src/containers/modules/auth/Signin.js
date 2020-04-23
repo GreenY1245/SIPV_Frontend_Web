@@ -8,6 +8,11 @@ import { Button } from '@material-ui/core/';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import '../../../assets/fonts/fonts.css';
+import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom'
+import queryString from 'query-string';
+
+import { signIn } from '../../../actions';
 
 const eye = <FontAwesomeIcon icon={faEye} />;
 const eyeSlash = <FontAwesomeIcon icon={faEyeSlash} />;
@@ -143,13 +148,35 @@ const styles = theme => ({
 
 const Signin = (props) => {
 
+  let history = useHistory();
+  const parsed = queryString.parse(props.location.search);
+
+  const [referrer, setReferrer] = useState(null);
+
+  React.useEffect(() => {
+    if (props.token !== null && props.token !== undefined) {
+      history.push('/main');
+    }
+
+    if (parsed.ref) {
+      setReferrer(parsed.ref);
+    }
+  }, [props.token, parsed.ref, history]);
+
+  const [username, setUsername] = useState(null);
+  const [password, setPassword] = useState(null);
+
   const [gesloVidno, nastaviVidnostGesla] = useState(false);
 
   const vidnostGesla = () => {
     nastaviVidnostGesla(gesloVidno ? false : true);
   };
 
-
+  const sendRequest = () => {
+    if (username && password) {
+      props.signIn({ username, password });
+    }
+  }
 
   return (
     <>
@@ -163,12 +190,16 @@ const Signin = (props) => {
         
         <div className={props.classes.rightContainer}>
           <div className={props.classes.loginFormContainer}>
-            <h1 style={{ color: '#bac1b8', fontFamily: 'Lato', textTransform: 'uppercase',letterSpacing: '0.3em', marginBottom: '5rem' }}>Welcome Back</h1>
+            { referrer === "register" ? (
+              <h1 style={{ color: '#bac1b8', fontFamily: 'Lato', textTransform: 'uppercase',letterSpacing: '0.3em', marginBottom: '5rem' }}>Successfuly registered, you may now sign in</h1>
+            ) : (
+              <h1 style={{ color: '#bac1b8', fontFamily: 'Lato', textTransform: 'uppercase',letterSpacing: '0.3em', marginBottom: '5rem' }}>Welcome Back</h1>
+            ) }
             <form className={props.classes.loginForm}>
               <label className={props.classes.formLabel}>Email address</label>
-              <input className={props.classes.input} type='email'></input>
+              <input onChange={(event) => { setUsername(event.target.value) }} className={props.classes.input} type='email'></input>
               <label className={props.classes.formLabel}>Password</label>
-              <input className={props.classes.input} type={gesloVidno ? 'text' : 'password'}></input>
+              <input onChange={(event) => { setPassword(event.target.value) }} className={props.classes.input} type={gesloVidno ? 'text' : 'password'}></input>
               <i className={props.classes.eyeIcon} onClick={vidnostGesla}>{gesloVidno ? eye : eyeSlash}</i>
               <div className={props.classes.loginOptions}>
                 <div className={props.classes.staySignedInContainer}>
@@ -177,10 +208,10 @@ const Signin = (props) => {
                 </div>
                 <div className={props.classes.forgotPasswordContainer}>
                   <img className={props.classes.forgotPasswordImage} src={lock} alt='lock'></img>
-                  <a href="#" style={{ position: 'relative', top: '-18px', left: '10px', color: '#bac1b8', textDecoration: 'none' }}>Forgot Password?</a>
+                  <a href="#fp" style={{ position: 'relative', top: '-18px', left: '10px', color: '#bac1b8', textDecoration: 'none' }}>Forgot Password?</a>
                 </div>
               </div>
-              <Button className={props.classes.customButton} variant='contained'>Sign In</Button>
+              <Button onClick={sendRequest} className={props.classes.customButton} variant='contained'>Sign In</Button>
             </form>
           </div>
         </div>
@@ -193,4 +224,15 @@ Signin.propTypes = {
   classes: PropTypes.object,
 }
 
-export default withStyles(styles)(Signin);
+const mapStateToProps = ({ auth }) => {
+  const { token } = auth;
+  return {
+    token
+  }
+};
+
+const mapDispatchToProps = {
+  signIn,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Signin));
