@@ -178,13 +178,17 @@ const Signin = (props) => {
     }
   }
 
+  const redirectToLogin = () => {
+    history.push('/auth/signup');
+  }
+
   return (
     <>
       <div className={props.classes.container}>
         <div className={props.classes.imageContainer}>
           <div className={props.classes.imageContainerText}>
             <h2>Sign Up and Start Chatting With Your Friends</h2>
-            <Button className={props.classes.customButton} variant='contained' style={{ textAlign: 'center', width: '50%', left: '0' }}>Create Account</Button>
+            <Button onClick={redirectToLogin} className={props.classes.customButton} variant='contained' style={{ textAlign: 'center', width: '50%', left: '0' }}>Create Account</Button>
           </div>
         </div>
         
