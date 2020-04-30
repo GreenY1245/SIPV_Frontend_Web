@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import { Button, MenuList, MenuItem, Paper, Popper, ClickAwayListener, Grow, IconButton, Typography, ButtonGroup } from '@material-ui/core';
 import classNames from 'classnames';
@@ -60,6 +60,7 @@ const Navbar = (props) => {
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef(null);
     const location = useLocation();
+    const history = useHistory();
 
     const handleToggle = () => {
         setOpen((prevOpen) => !prevOpen);
@@ -81,6 +82,10 @@ const Navbar = (props) => {
 
         prevOpen.current = open;
     }, [open]);
+
+    const redirectTo = (path) => {
+        history.push(path);
+    }
 
     return (
         <div className={props.classes.root}>
@@ -106,7 +111,7 @@ const Navbar = (props) => {
                                                 <ClickAwayListener onClickAway={handleClose}>
                                                     <MenuList>
                                                         {item.content.map((sublink, index) => (
-                                                            <MenuItem key={sublink.name} className={classNames([props.classes.boldText, props.classes.primaryColor])} component="button" onClick={() => { console.log(sublink) }}>{sublink.name}</MenuItem>
+                                                            <MenuItem key={sublink.name} className={classNames([props.classes.boldText, props.classes.primaryColor])} component="button" onClick={() => {redirectTo(sublink.link)}}>{sublink.name}</MenuItem>
                                                         ))}
                                                     </MenuList>
                                                 </ClickAwayListener>
@@ -118,7 +123,7 @@ const Navbar = (props) => {
                             )
                     } else {
                         return (
-                            <Button style={{ color: location && location.pathname === item.link ? '#636363' : undefined, borderColor: location && location.pathname === item.link ? '#636363' : undefined }} className={classNames([props.classes.boldText, props.classes.padding, props.classes.primaryColor, props.classes.border])} key={item.name} onClick={() => {console.log(item)}}>{item.name}</Button>
+                            <Button style={{ color: location && location.pathname === item.link ? '#636363' : undefined, borderColor: location && location.pathname === item.link ? '#636363' : undefined }} className={classNames([props.classes.boldText, props.classes.padding, props.classes.primaryColor, props.classes.border])} key={item.name} onClick={() => {redirectTo(item.link)}}>{item.name}</Button>
                         )
                     }
                 })}
@@ -126,10 +131,10 @@ const Navbar = (props) => {
             
             <ThemeProvider theme={theme}>
                 <ButtonGroup>
-                    <Button style={{ color: location && (location.pathname === '/auth' || location.pathname === '/auth/signin') ? '#636363' : undefined, borderColor: location && (location.pathname === '/auth' || location.pathname === '/auth/signin') ? '#636363' : undefined }} className={classNames([props.classes.boldText, props.classes.border])} variant="contained" color="primary">
+                    <Button onClick={() => { redirectTo('/auth') }} style={{ color: location && (location.pathname === '/auth' || location.pathname === '/auth/signin') ? '#636363' : undefined, borderColor: location && (location.pathname === '/auth' || location.pathname === '/auth/signin') ? '#636363' : undefined }} className={classNames([props.classes.boldText, props.classes.border])} variant="contained" color="primary">
                         Login
                     </Button>
-                    <Button style={{ color: location && location.pathname === '/auth/signup' ? '#636363' : undefined, borderColor: location && location.pathname === '/auth/signup' ? '#636363' : undefined }} className={classNames([props.classes.boldText, props.classes.border])} variant="contained" color="secondary">
+                    <Button onClick={() => { redirectTo('/auth/signup') }} style={{ color: location && location.pathname === '/auth/signup' ? '#636363' : undefined, borderColor: location && location.pathname === '/auth/signup' ? '#636363' : undefined }} className={classNames([props.classes.boldText, props.classes.border])} variant="contained" color="secondary">
                         Register
                     </Button>
                 </ButtonGroup>

@@ -8,6 +8,7 @@ import Navbar from '../../../components/Navbar';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 import HomepageImage from '../../../assets/home-webapp-app-image.png';
 import BCIcon from '../../../assets/bc64.png';
+import { useHistory } from 'react-router-dom';
 
 const theme = createMuiTheme({
     palette: {
@@ -131,6 +132,16 @@ const links = [
 
 const Home = (props) => {
 
+  const history = useHistory();
+
+  const redirectTo = (path) => {
+    if (path.startsWith("http") || path.startsWith("mailto")) {
+      window.open(path, '_blank');
+    } else {
+      history.push(path);
+    }
+  }
+
   return (
     <div className={props.classes.root}>
       <Container maxWidth="lg">
@@ -146,7 +157,7 @@ const Home = (props) => {
               <Typography variant="h5">asynchronous discussions without the chatter.</Typography>
 
               <ThemeProvider theme={theme}>
-                <Button size="large" style={{ marginTop: '40px', paddingTop: '15px', paddingBottom: '15px', fontWeight: 400 }} color="secondary" variant="contained">Try BadCommunicator for free</Button>
+                <Button onClick={() => {redirectTo("https://github.com/GreenY1245/SIPV_Frontend_Desktop")}} size="large" style={{ marginTop: '40px', paddingTop: '15px', paddingBottom: '15px', fontWeight: 400 }} color="secondary" variant="contained">Try BadCommunicator for free</Button>
                 <Typography variant="subtitle2">BadCommunicator is open source! <Link className={props.classes.boldText} href="https://github.com/GreenY1245/SIPV_Frontend_Web">Github</Link></Typography>
               </ThemeProvider>
             </div>
@@ -167,7 +178,7 @@ const Home = (props) => {
               <CardContent className={props.classes.cardContentDescription}>
                 <Typography variant="h5">BadCommunicator is free for everyone. Download it here, or go to the app store for more download options</Typography>
                 <ThemeProvider theme={theme}>
-                  <Button size="large" style={{ marginTop: '5px', paddingTop: '10px', paddingBottom: '10px' }} color="secondary" variant="contained">Try BadCommunicator for free</Button>
+                  <Button onClick={() => {redirectTo("https://github.com/GreenY1245/SIPV_Frontend_Desktop")}} size="large" style={{ marginTop: '5px', paddingTop: '10px', paddingBottom: '10px' }} color="secondary" variant="contained">Try BadCommunicator for free</Button>
                 </ThemeProvider>
               </CardContent>
             </Card>
@@ -184,7 +195,7 @@ const Home = (props) => {
               <Typography className={classNames([props.classes.titleText])} variant="h6">BadCommunicator</Typography>
             </div>
             <div style={{ paddingTop: '40px' }}>
-              <Typography variant="body1"><b>Login</b> or <b>Register</b></Typography>
+              <Typography variant="body1"><b style={{ cursor: 'pointer' }} onClick={() => {redirectTo('/auth')}} >Login</b> or <b style={{ cursor: 'pointer' }} onClick={() => {redirectTo('/auth')}} >Register</b></Typography>
             </div>
             <div style={{ paddingTop: '20px' }}>
               <Typography variant="caption"><b>Privacy</b> &amp; <b>Terms</b></Typography>
@@ -200,18 +211,18 @@ const Home = (props) => {
                 <Grid item xs={12} lg={3}>
                   <Typography variant="h6" color="primary">Product</Typography>
 
-                  <Typography style={{ paddingTop: '20px' }} variant="body1" color="primary">What's new</Typography>
-                  <Typography style={{ paddingTop: '5px' }} variant="body1" color="primary">GitHub</Typography>
+                  <Typography onClick={() => {redirectTo('https://github.com/GreenY1245/SIPV_Frontend_Web')}} style={{ paddingTop: '20px', cursor: 'pointer' }} variant="body1" color="primary">What's new</Typography>
+                  <Typography onClick={() => {redirectTo('https://github.com/GreenY1245/SIPV_Frontend_Web')}} style={{ paddingTop: '5px', cursor: 'pointer' }} variant="body1" color="primary">GitHub</Typography>
                 </Grid>
                 <Grid item xs={12} lg={3}>
                   <Typography variant="h6" color="primary">Company</Typography>
 
-                  <Typography style={{ paddingTop: '20px' }} variant="body1" color="primary">About</Typography>
+                  <Typography onClick={() => {redirectTo('#nolink')}} style={{ paddingTop: '20px', cursor: 'pointer' }} variant="body1" color="primary">About</Typography>
                 </Grid>
                 <Grid item xs={12} lg={3}>
                   <Typography variant="h6" color="primary">Resources</Typography>
 
-                  <Typography style={{ paddingTop: '20px' }} variant="body1" color="primary">Contact us</Typography>
+                  <Typography onClick={() => {redirectTo('mailto:klemen.plaznik@student.um.si')}} style={{ paddingTop: '20px', cursor: 'pointer' }} variant="body1" color="primary">Contact us</Typography>
                 </Grid>
               </Grid>
             </div>
