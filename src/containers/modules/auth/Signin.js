@@ -155,7 +155,7 @@ const Signin = (props) => {
 
   React.useEffect(() => {
     if (props.token !== null && props.token !== undefined) {
-      history.push('/main');
+      history.push('/chat');
     }
 
     if (parsed.ref) {
