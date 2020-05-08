@@ -4,7 +4,8 @@ const INIT_STATE = {
     registered: false,
     token: null,
     loading: false,
-    error: false
+    error: false,
+    username: '',
 }
 
 export default (state = INIT_STATE, action) => {
@@ -18,9 +19,11 @@ export default (state = INIT_STATE, action) => {
             }
 
         case SIGN_IN_SUCCESS:
+            console.log(action.payload);
             return {
                 ...state,
-                token: action.payload,
+                token: action.payload.userData.data.data,
+                username: action.payload.userData.username,
                 loading: false
             }
 

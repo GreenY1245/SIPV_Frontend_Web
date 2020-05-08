@@ -24,11 +24,13 @@ function* signIn({ payload }) {
 
     try {
         const data = yield call(signInRequest, payload.username, payload.password);
+        const userData = {...data, username: payload.username};
 
         localStorage.setItem("token", JSON.stringify(data));
+        localStorage.setItem("username", payload.username);
 
         yield put(signInSuccess({
-            data
+            userData
         }));
 
     } catch(err) {

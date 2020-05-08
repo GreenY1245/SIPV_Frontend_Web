@@ -23,7 +23,7 @@ const styles = {
   },
 };
 
-const ChatBubble = (props) => {
+const ChatUserCard = (props) => {
 
   return (
     <div className={props.classes.root}>
@@ -31,17 +31,13 @@ const ChatBubble = (props) => {
         <Avatar name={props.username} size={30} round className={props.classes.avatar} />
         <Typography gutterBottom><b>{props.username}</b></Typography>
       </div>
-      
-      <Typography>{props.message}</Typography>
     </div>
   )
 }
 
-ChatBubble.propTypes = {
+ChatUserCard.propTypes = {
   classes: PropTypes.object,
   username: PropTypes.string.isRequired,
-  userImage: PropTypes.string,
-  message: PropTypes.string.isRequired
 }
 
-export default withStyles(styles)(ChatBubble);
+export default withStyles(styles)(ChatUserCard);
