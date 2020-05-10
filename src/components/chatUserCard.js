@@ -9,14 +9,17 @@ const styles = {
 
   root: {
       marginTop: '5px',
-      backgroundColor: '#BAC1B8',
-      color: '#2B303A',
+      color: '#BAC1B8',
       padding: '10px',
-      borderRadius: '5px'
+      borderRadius: '5px',
+      '&:hover': {
+        backgroundColor: '#1A1D29',
+      }
   },
   user: {
       display: 'flex',
       flexDirection: 'row',
+      alignItems: 'center',
   },
   avatar: {
     marginRight: '8px',
@@ -29,7 +32,7 @@ const ChatUserCard = (props) => {
     <div className={props.classes.root}>
       <div className={props.classes.user}>
         <Avatar name={props.username} size={30} round className={props.classes.avatar} />
-        <Typography gutterBottom><b>{props.username}</b></Typography>
+        <Typography><b>{props.username}</b></Typography>
       </div>
     </div>
   )

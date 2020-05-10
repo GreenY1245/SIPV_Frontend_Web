@@ -3,12 +3,17 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
 import 'typeface-roboto';
-import { Grid, InputBase } from '@material-ui/core';
+import { Grid, InputBase, Divider, Tooltip, IconButton, Typography, InputAdornment } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import zamudnikiIcon from '../../../assets/bc64.png';
 import ChatBubble from '../../../components/chatBubble';
 import ChatUserCard from '../../../components/chatUserCard';
+import ChatServerCard from '../../../components/chatServerCard';
+import LogoutIcon from 'mdi-react/LogoutIcon';
+import SearchIcon from '@material-ui/icons/Search';
+import MessageIcon from '@material-ui/icons/Message';
+import { sendMessage, getMessages, getRooms, getRoom } from '../../../actions';
 
 const styles = {
 
@@ -21,8 +26,9 @@ const styles = {
         backgroundColor: '#222732',
         color: '#BAC1B8',
         display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'flex-start',
+        alignItems: 'center',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
     },
     chat: {
         backgroundColor: '#2B303A',
@@ -32,6 +38,8 @@ const styles = {
     users: {
         backgroundColor: '#222732',
         color: '#BAC1B8',
+        display: 'flex',
+        flexDirection: 'column',
     },
     container: {
         height: '100%',
@@ -40,8 +48,6 @@ const styles = {
         padding: '10px',
     },
     chatBoxes: {
-        //display: 'flex',
-        //flexDirection: 'column-reverse',
         height: '100%',
         overflow: 'auto',
     },
@@ -49,6 +55,13 @@ const styles = {
         color: '#BAC1B8',
         height: '50px',
         fontSize: '1.05em',
+        width: '100%',
+    },
+    searchInput: {
+        marginTop: '10px',
+        color: '#BAC1B8',
+        height: '40px',
+        fontSize: '1.04em',
         width: '100%',
     },
     chatInputContainer: {
@@ -72,29 +85,61 @@ const styles = {
     connectedUsersTitle: {
         textAlign: 'center',
     },
+    sidebarServers: {
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    titleText: {
+        fontWeight: 500
+    },
+    sidebarAppIcon: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    logout: {
+        paddingBottom: '10px',
+    },
 };
 
 const Chat = (props) => {
 
     const [chatMessage, setChatMessage] = React.useState('');
     const [chatMessages, setChatMessages] = React.useState([]);
+    const [searchMessage, setSearchMessage] = React.useState('');
     const chatBoxesRef = React.useRef();
     const history = useHistory();
 
-    /*
+    React.useEffect(() => {
+        props.getRooms(props.username);
+    }, []);
+
+    React.useEffect(() => {
+        if (props.rooms &&props.rooms.length > 0) {
+            props.getRoom({username: props.username, roomName: props.rooms[0].Title});
+        }
+    }, [props.rooms]);
+
+    React.useEffect(() => {
+        if (props.room) {
+            props.getMessages(props.room.ChatId);
+        }
+    }, [props.room]);
+
+    console.log(props.messages);
+
     React.useEffect(() => {
         if (!props.username) {
             history.push('/auth');
         }
     })
-    */
 
     React.useEffect(() => {
-        console.log("chatMessages updated, fixing scroll position")
         chatBoxesRef.current.scrollTop = chatBoxesRef.current.scrollHeight;
     }, [chatMessages.length])
 
-    const handleKeyPress = (evt) => {
+    const handleChatKeyPress = (evt) => {
         if (evt.key === 'Enter') {
             let newMessages = chatMessages;
             newMessages.push({ username: props.username ? props.username : 'TESTING NAME', message: chatMessage });
@@ -103,13 +148,40 @@ const Chat = (props) => {
         }
     }
 
+    const handleSearchKeyPress = (evt) => {
+        if (evt.key === 'Enter') {
+            //noop
+        }
+    }
+
+    const serverChange = (server) => {
+        console.log("Changed server to... " + server);
+    }
+
     return (
         <div className={props.classes.root}>
         
         <Grid container spacing={0} className={props.classes.container}>
 
             <Grid item md={1} className={classNames([props.classes.sidebar, props.classes.inner])}>
-                <img alt="Zamudniki icon" src={zamudnikiIcon} style={{ marginTop: '30px' }} />
+                <div className={props.classes.sidebarAppIcon}>
+                    <img alt="Zamudniki icon" src={zamudnikiIcon} style={{ marginTop: '30px' }} />
+                    <Typography className={classNames([props.classes.titleText])} variant="h6">BadCommunicator</Typography>
+                </div>
+
+                <div className={props.classes.sidebarServers}>
+                    {props.rooms && props.rooms.map((item, index) => (
+                        <ChatServerCard key={index} serverChange={serverChange} server={item} />
+                    ))}
+                </div>
+
+                <div className={props.classes.logout}>
+                    <Tooltip title={"Sign out"}>
+                        <IconButton color="secondary">
+                            <LogoutIcon size={32} />
+                        </IconButton>
+                    </Tooltip>
+                </div>
             </Grid>
 
             <Grid item md={9} className={classNames([props.classes.chat, props.classes.inner])}>
@@ -121,6 +193,7 @@ const Chat = (props) => {
                                 <ChatBubble key={index} username={item.username} message={item.message} />
                             ))}
                         </div>
+                        <Divider variant="middle" />
                     </Grid>
 
                     <Grid item lg={12} className={props.classes.chatInputContainer}>
@@ -132,7 +205,8 @@ const Chat = (props) => {
                                 value={chatMessage}
                                 onChange={(evt) => { setChatMessage(evt.target.value) }}
                                 classes={{ root: props.classes.chatTextFieldRoot }}
-                                onKeyPress={handleKeyPress}
+                                onKeyPress={handleChatKeyPress}
+                                startAdornment={<InputAdornment position="start"><MessageIcon /></InputAdornment>}
                             />
                         </div>
                     </Grid>
@@ -140,8 +214,23 @@ const Chat = (props) => {
             </Grid>
 
             <Grid item md={2} className={classNames([props.classes.users, props.classes.inner])}>
-                <h4 className={props.classes.connectedUsersTitle}>Connected users</h4>
-                <ChatUserCard username={props.username ? props.username : 'TESTING NAME'} />
+                <div className={props.classes.search}>
+                    <InputBase 
+                        className={props.classes.searchInput}
+                        fullWidth
+                        placeholder="Search in #server"
+                        value={searchMessage}
+                        onChange={(evt) => { setSearchMessage(evt.target.value) }}
+                        classes={{ root: props.classes.chatTextFieldRoot }}
+                        onKeyPress={handleSearchKeyPress}
+                        startAdornment={<InputAdornment position="start"><SearchIcon /></InputAdornment>}
+                    />
+                </div>
+
+                <div className={props.classes.connectedUsers}>
+                    <h4 className={props.classes.connectedUsersTitle}>Connected users</h4>
+                    <ChatUserCard username={props.username} />
+                </div>
             </Grid>
 
         </Grid>
@@ -154,13 +243,22 @@ Chat.propTypes = {
   classes: PropTypes.object,
 }
 
-const mapStateToProps = ({ auth }) => {
+const mapStateToProps = ({ auth, chat }) => {
     const { username } = auth;
+    const { rooms, room, messages } = chat;
     return {
-        username
+        username,
+        room,
+        rooms,
+        messages,
     }
 };
   
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+    getRoom,
+    getRooms,
+    getMessages,
+    sendMessage,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Chat));

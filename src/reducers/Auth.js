@@ -19,7 +19,6 @@ export default (state = INIT_STATE, action) => {
             }
 
         case SIGN_IN_SUCCESS:
-            console.log(action.payload);
             return {
                 ...state,
                 token: action.payload.userData.data.data,

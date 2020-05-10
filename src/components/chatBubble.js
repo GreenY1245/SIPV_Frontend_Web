@@ -12,7 +12,8 @@ const styles = {
       backgroundColor: '#BAC1B8',
       color: '#2B303A',
       padding: '10px',
-      borderRadius: '5px'
+      borderRadius: '5px',
+      display: 'flex',
   },
   user: {
       display: 'flex',
@@ -21,18 +22,32 @@ const styles = {
   avatar: {
     marginRight: '8px',
   },
+  message: {
+    paddingTop: '5px',
+  },
+  avatarContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingRight: '10px',
+  },
 };
 
 const ChatBubble = (props) => {
 
   return (
     <div className={props.classes.root}>
-      <div className={props.classes.user}>
-        <Avatar name={props.username} size={30} round className={props.classes.avatar} />
-        <Typography gutterBottom><b>{props.username}</b></Typography>
+      <div className={props.classes.avatarContainer}>
+        <Avatar name={props.username} size={45} round className={props.classes.avatar} />
       </div>
-      
-      <Typography>{props.message}</Typography>
+
+      <div>
+        <div className={props.classes.user}>
+          <Typography gutterBottom><b>{props.username}</b></Typography>
+        </div>
+        
+        <Typography className={props.classes.message}>{props.message}</Typography>
+      </div>
     </div>
   )
 }
