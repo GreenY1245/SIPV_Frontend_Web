@@ -1,4 +1,4 @@
-import { GET_ROOM, GET_ROOMS, CREATE_ROOM, ADD_USER, CHANGE_NAME, SEND_MESSAGE, REMOVE_MESSAGE, REQUEST_CHANNEL, GET_MESSAGES, GET_ROOM_SUCCESS, GET_ROOM_FAILURE, GET_ROOMS_SUCCESS, GET_ROOMS_FAILURE, GET_MESSAGES_SUCCESS, GET_MESSAGES_FAILURE, SEND_MESSAGE_FAILURE } from '../constants/ChatTypes';
+import { GET_ROOM, GET_ROOMS, CREATE_ROOM, ADD_USER, CHANGE_NAME, SEND_MESSAGE, REMOVE_MESSAGE, REQUEST_CHANNEL, GET_MESSAGES, GET_ROOM_SUCCESS, GET_ROOM_FAILURE, GET_ROOMS_SUCCESS, GET_ROOMS_FAILURE, GET_MESSAGES_SUCCESS, GET_MESSAGES_FAILURE, SEND_MESSAGE_FAILURE, SET_ROOM, SET_ROOM_SUCCESS, SET_ROOM_FAILURE } from '../constants/ChatTypes';
 
 const INIT_STATE = {
     rooms: null,
@@ -35,6 +35,26 @@ export default (state = INIT_STATE, action) => {
                 room_err: true,
             }
 
+        case SET_ROOM:
+            return {
+                ...state,
+                loading: true
+            }
+
+        case SET_ROOM_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                room: action.payload
+            }
+
+        case SET_ROOM_FAILURE:
+            return {
+                ...state,
+                loading: false,
+                room_err: true
+            }
+
         case GET_ROOMS:
             return {
                 ...state,
@@ -62,15 +82,13 @@ export default (state = INIT_STATE, action) => {
             }
 
         case GET_MESSAGES_SUCCESS:
-            console.log("MESSAGES GOT")
             return {
                 ...state,
                 loading: false,
-                messages: action.payload.data,
+                messages: action.payload.data.data.Chat,
             }
 
         case GET_MESSAGES_FAILURE:
-            console.log("MESSAGES FAILED")
             return {
                 ...state,
                 loading: false,

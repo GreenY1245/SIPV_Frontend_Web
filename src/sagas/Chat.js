@@ -1,8 +1,8 @@
 import { all, fork, put, takeLatest, call } from 'redux-saga/effects';
 import axios from 'axios';
 
-import { GET_ROOM, GET_ROOMS, GET_MESSAGES, GET_MESSAGES_SUCCESS, GET_MESSAGES_FAILURE, SEND_MESSAGE, SEND_MESSAGE_FAILURE, GET_ROOMS_SUCCESS, GET_ROOMS_FAILURE, GET_ROOM_SUCCESS, GET_ROOM_FAILURE } from '../constants/ChatTypes';
-import { getMessagesSuccess, getMessagesFailure, getRoomSuccess, getRoomFailure, getRoomsSuccess, getRoomsFailure, sendMessageFailure } from '../actions';
+import { GET_ROOM, GET_ROOMS, GET_MESSAGES, GET_MESSAGES_SUCCESS, GET_MESSAGES_FAILURE, SEND_MESSAGE, SEND_MESSAGE_FAILURE, GET_ROOMS_SUCCESS, GET_ROOMS_FAILURE, GET_ROOM_SUCCESS, GET_ROOM_FAILURE, SET_ROOM, SET_ROOM_FAILURE, SET_ROOM_SUCCESS } from '../constants/ChatTypes';
+import { getMessages as getMessagesAction, getMessagesSuccess, getMessagesFailure, getRoomSuccess, getRoomFailure, getRoomsSuccess, getRoomsFailure, sendMessageFailure, setRoomSuccess, setRoomFailure } from '../actions';
 
 function getAxiosOpts(bearer) {
     return {
@@ -33,6 +33,8 @@ function* sendMessage({ payload }) {
 
     } catch(err) {
         yield put(sendMessageFailure());
+    } finally {
+        yield put(getMessagesAction(payload.chatID));
     }
 }
 
@@ -82,7 +84,6 @@ function* getRoom({ payload }) {
 }
 
 function getMessagesRequest(chatID, bearer) {
-
     return axios.get(`${process.env.REACT_APP_API_BASE}/chat/${chatID}`, getAxiosOpts(bearer));
 }
 
@@ -100,8 +101,16 @@ function* getMessages({ payload }) {
         yield put(getMessagesSuccess(data));
 
     } catch(err) {
-        console.log(err);
         yield put(getMessagesFailure());
+    }
+}
+
+function* setRoom({ payload }) {
+
+    if (payload) {
+        yield put(setRoomSuccess(payload));
+    } else {
+        yield put(setRoomFailure());
     }
 }
 
@@ -135,6 +144,16 @@ export function* watchGetRoomFailure() {
     yield takeLatest(GET_ROOM_FAILURE, getRoomFailure);
 }
 
+export function* watchSetRoom() {
+    yield takeLatest(SET_ROOM, setRoom);
+}
+export function* watchSetRoomSuccess() {
+    yield takeLatest(SET_ROOM_SUCCESS, setRoomSuccess);
+}
+export function* watchSetRoomFailure() {
+    yield takeLatest(SET_ROOM_FAILURE, setRoomFailure);
+}
+
 export function* watchSendMessage() {
     yield takeLatest(SEND_MESSAGE, sendMessage);
 }
@@ -155,5 +174,8 @@ export default function* rootSaga() {
         fork(watchGetMessagesFailure),
         fork(watchSendMessage),
         fork(sendMessageFailure),
+        fork(watchSetRoom),
+        fork(watchSetRoomSuccess),
+        fork(watchSetRoomFailure),
     ]);
 }

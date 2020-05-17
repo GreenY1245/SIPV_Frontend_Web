@@ -2,6 +2,9 @@ export const GET_ROOM = 'get_room'; //get
 export const GET_ROOM_SUCCESS = 'get_room_s'; //get
 export const GET_ROOM_FAILURE = 'get_room_f'; //get
 
+export const SET_ROOM = 'set_room';
+export const SET_ROOM_SUCCESS = 'set_room_s';
+export const SET_ROOM_FAILURE = 'set_room_f';
 
 export const GET_ROOMS = 'get_rooms'; //get
 export const GET_ROOMS_SUCCESS = 'get_rooms_s'; //get

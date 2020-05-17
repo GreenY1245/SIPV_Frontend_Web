@@ -13,7 +13,7 @@ import ChatServerCard from '../../../components/chatServerCard';
 import LogoutIcon from 'mdi-react/LogoutIcon';
 import SearchIcon from '@material-ui/icons/Search';
 import MessageIcon from '@material-ui/icons/Message';
-import { sendMessage, getMessages, getRooms, getRoom } from '../../../actions';
+import { sendMessage, getMessages, getRooms, getRoom, setRoom } from '../../../actions';
 
 const styles = {
 
@@ -106,10 +106,10 @@ const styles = {
 const Chat = (props) => {
 
     const [chatMessage, setChatMessage] = React.useState('');
-    const [chatMessages, setChatMessages] = React.useState([]);
     const [searchMessage, setSearchMessage] = React.useState('');
     const chatBoxesRef = React.useRef();
     const history = useHistory();
+    let refresher = null;
 
     React.useEffect(() => {
         props.getRooms(props.username);
@@ -122,12 +122,16 @@ const Chat = (props) => {
     }, [props.rooms]);
 
     React.useEffect(() => {
+        
         if (props.room) {
-            props.getMessages(props.room.ChatId);
+            refresher = setInterval(() => props.getMessages(props.room.ChatId), 500);
+        }
+
+        return function cleanup() {
+            clearInterval(refresher);
+            refresher = null;
         }
     }, [props.room]);
-
-    console.log(props.messages);
 
     React.useEffect(() => {
         if (!props.username) {
@@ -137,13 +141,18 @@ const Chat = (props) => {
 
     React.useEffect(() => {
         chatBoxesRef.current.scrollTop = chatBoxesRef.current.scrollHeight;
-    }, [chatMessages.length])
+    }, [props.messages])
 
     const handleChatKeyPress = (evt) => {
         if (evt.key === 'Enter') {
-            let newMessages = chatMessages;
-            newMessages.push({ username: props.username ? props.username : 'TESTING NAME', message: chatMessage });
-            setChatMessages(newMessages);
+
+            const messageFrame = {
+                chatID: props.room.ChatId,
+                username: props.username,
+                message: chatMessage
+            }
+            props.sendMessage(messageFrame);
+
             setChatMessage('');
         }
     }
@@ -155,7 +164,7 @@ const Chat = (props) => {
     }
 
     const serverChange = (server) => {
-        console.log("Changed server to... " + server);
+        props.setRoom(server);
     }
 
     return (
@@ -171,7 +180,7 @@ const Chat = (props) => {
 
                 <div className={props.classes.sidebarServers}>
                     {props.rooms && props.rooms.map((item, index) => (
-                        <ChatServerCard key={index} serverChange={serverChange} server={item} />
+                        <ChatServerCard key={index} serverChange={() => {serverChange(item)}} server={item} />
                     ))}
                 </div>
 
@@ -189,9 +198,13 @@ const Chat = (props) => {
                 <div className={props.classes.container}>
                     <Grid item lg={12} className={props.classes.chatContainer}>
                         <div className={props.classes.chatBoxes} ref={chatBoxesRef}>
-                            {chatMessages && chatMessages.map((item, index) => (
-                                <ChatBubble key={index} username={item.username} message={item.message} />
+                            {props.messages && props.messages.map((item, index) => (
+                                <ChatBubble key={index} username={item.Username} message={item.Message} />
                             ))}
+
+                            {props.messages === typeof null && (
+                                <p style={{ textAlign: 'center' }}>No messages to display...</p>
+                            )}
                         </div>
                         <Divider variant="middle" />
                     </Grid>
@@ -229,7 +242,9 @@ const Chat = (props) => {
 
                 <div className={props.classes.connectedUsers}>
                     <h4 className={props.classes.connectedUsersTitle}>Connected users</h4>
-                    <ChatUserCard username={props.username} />
+                    {props.room && props.room.People && props.room.People.map((item, index) => (
+                        <ChatUserCard key={index} username={item.User} />
+                    ))}
                 </div>
             </Grid>
 
@@ -255,6 +270,7 @@ const mapStateToProps = ({ auth, chat }) => {
 };
   
 const mapDispatchToProps = {
+    setRoom,
     getRoom,
     getRooms,
     getMessages,
