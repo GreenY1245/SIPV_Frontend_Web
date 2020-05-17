@@ -33,7 +33,6 @@ const footerTheme = createMuiTheme({
   }
 });
 
-
 const styles = {
 
   root: {

@@ -1,4 +1,4 @@
-import { SIGN_IN, SIGN_IN_FAILURE, SIGN_IN_SUCCESS, SIGN_OUT, REGISTER, REGISTER_FAILURE, REGISTER_SUCCESS } from '../constants/AuthTypes';
+import { SIGN_IN, SIGN_IN_FAILURE, SIGN_IN_SUCCESS, SIGN_OUT, REGISTER, REGISTER_FAILURE, REGISTER_SUCCESS, SIGN_OUT_SUCCESS } from '../constants/AuthTypes';
 
 export const signIn = (user) => {
     return {
@@ -23,6 +23,12 @@ export const signInFailure = () => {
 export const signOut = () => {
     return {
         type: SIGN_OUT
+    }
+}
+
+export const signOutSuccess = () => {
+    return {
+        type: SIGN_OUT_SUCCESS
     }
 }
 

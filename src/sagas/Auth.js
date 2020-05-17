@@ -1,8 +1,13 @@
 import { all, fork, put, takeLatest, call } from 'redux-saga/effects';
 import axios from 'axios';
 
-import { SIGN_IN, SIGN_IN_SUCCESS, SIGN_IN_FAILURE, REGISTER, REGISTER_SUCCESS, REGISTER_FAILURE } from '../constants/AuthTypes';
-import { signInSuccess, signInFailure, registerSuccess, registerFailure } from '../actions';
+import { SIGN_IN, SIGN_IN_SUCCESS, SIGN_IN_FAILURE, REGISTER, REGISTER_SUCCESS, REGISTER_FAILURE, SIGN_OUT, SIGN_OUT_SUCCESS } from '../constants/AuthTypes';
+import { signInSuccess, signInFailure, registerSuccess, registerFailure, signOutSuccess } from '../actions';
+
+function* signOut() {
+
+    yield put(signOutSuccess());
+}
 
 /**
  * 
@@ -24,11 +29,13 @@ function* signIn({ payload }) {
 
     try {
         const data = yield call(signInRequest, payload.username, payload.password);
+        const userData = {...data, username: payload.username};
 
         localStorage.setItem("token", JSON.stringify(data));
+        localStorage.setItem("username", payload.username);
 
         yield put(signInSuccess({
-            data
+            userData
         }));
 
     } catch(err) {
@@ -91,6 +98,13 @@ export function* watchRegisterFailure() {
     yield takeLatest(REGISTER_FAILURE, registerFailure);
 }
 
+export function* watchSignOut() {
+    yield takeLatest(SIGN_OUT, signOut);
+}
+export function* watchSignOutSuccess() {
+    yield takeLatest(SIGN_OUT_SUCCESS, signOutSuccess);
+}
+
 export default function* rootSaga() {
     yield all([
         fork(watchSignIn),
@@ -98,6 +112,8 @@ export default function* rootSaga() {
         fork(watchSignInFailure),
         fork(watchRegister),
         fork(watchRegisterSuccess),
-        fork(watchRegisterFailure)
+        fork(watchRegisterFailure),
+        fork(watchSignOut),
+        fork(watchSignOutSuccess),
     ]);
 }
