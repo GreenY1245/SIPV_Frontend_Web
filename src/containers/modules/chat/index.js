@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
 import 'typeface-roboto';
-import { Grid, InputBase, Divider, Tooltip, IconButton, Typography, InputAdornment } from '@material-ui/core';
+import { Grid, InputBase, Divider, Tooltip, IconButton, Typography, InputAdornment, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import zamudnikiIcon from '../../../assets/bc64.png';
@@ -11,9 +11,11 @@ import ChatBubble from '../../../components/chatBubble';
 import ChatUserCard from '../../../components/chatUserCard';
 import ChatServerCard from '../../../components/chatServerCard';
 import LogoutIcon from 'mdi-react/LogoutIcon';
+import HomePlusIcon from 'mdi-react/HomePlusIcon';
 import SearchIcon from '@material-ui/icons/Search';
 import MessageIcon from '@material-ui/icons/Message';
-import { sendMessage, getMessages, getRooms, getRoom, setRoom } from '../../../actions';
+import PoundIcon from 'mdi-react/PoundIcon';
+import { sendMessage, getMessages, getRooms, getRoom, setRoom, createRoom } from '../../../actions';
 
 const styles = {
 
@@ -107,6 +109,8 @@ const Chat = (props) => {
 
     const [chatMessage, setChatMessage] = React.useState('');
     const [searchMessage, setSearchMessage] = React.useState('');
+    const [createRoomModalOpen, setCreateRoomModalOpen] = React.useState(false);
+    const [createRoomTitle, setCreateRoomTitle] = React.useState('');
     const chatBoxesRef = React.useRef();
     const history = useHistory();
     let refresher = null;
@@ -167,6 +171,24 @@ const Chat = (props) => {
         props.setRoom(server);
     }
 
+    const logout = () => {
+
+    }
+
+    const handleToggleCreateRoomModal = (value) => {
+        if (typeof value === 'undefined' || !value) {
+            setCreateRoomModalOpen(!createRoomModalOpen);
+        } else {
+            setCreateRoomModalOpen(value);
+        }
+    }
+
+    const createRoomConfirm = () => {
+        handleToggleCreateRoomModal(false);
+        props.createRoom({ title: createRoomTitle, username: props.username });
+        setCreateRoomTitle('');
+    }
+
     return (
         <div className={props.classes.root}>
         
@@ -188,6 +210,12 @@ const Chat = (props) => {
                     <Tooltip title={"Sign out"}>
                         <IconButton color="secondary">
                             <LogoutIcon size={32} />
+                        </IconButton>
+                    </Tooltip>
+
+                    <Tooltip title={"Create new room"}>
+                        <IconButton color="secondary" onClick={() => {handleToggleCreateRoomModal(true)}}>
+                            <HomePlusIcon size={32} />
                         </IconButton>
                     </Tooltip>
                 </div>
@@ -250,6 +278,31 @@ const Chat = (props) => {
 
         </Grid>
 
+        <Dialog open={createRoomModalOpen} onClose={() => {handleToggleCreateRoomModal(false)}}>
+
+            <DialogTitle>Create new room</DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    To create a new room, please input the room name.
+                </DialogContentText>
+
+                <InputBase 
+                    className={props.classes.searchInput}
+                    fullWidth
+                    placeholder="Room name"
+                    value={createRoomTitle}
+                    onChange={(evt) => { setCreateRoomTitle(evt.target.value) }}
+                    classes={{ root: props.classes.chatTextFieldRoot }}
+                    startAdornment={<InputAdornment position="start"><PoundIcon /></InputAdornment>}
+                />
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={() => {handleToggleCreateRoomModal(false)}}>Close</Button>
+                <Button onClick={createRoomConfirm}>Confirm</Button>
+            </DialogActions>
+
+        </Dialog>
+
         </div>
     )
 }
@@ -275,6 +328,7 @@ const mapDispatchToProps = {
     getRooms,
     getMessages,
     sendMessage,
+    createRoom,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Chat));

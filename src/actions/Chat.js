@@ -1,4 +1,4 @@
-import { GET_MESSAGES_FAILURE, GET_MESSAGES_SUCCESS, GET_ROOM, GET_ROOMS, CREATE_ROOM, ADD_USER, CHANGE_NAME, SEND_MESSAGE, REMOVE_MESSAGE, REQUEST_CHANNEL, GET_MESSAGES, GET_ROOM_FAILURE, GET_ROOM_SUCCESS, GET_ROOMS_SUCCESS, GET_ROOMS_FAILURE, SEND_MESSAGE_FAILURE, SET_ROOM, SET_ROOM_FAILURE, SET_ROOM_SUCCESS } from '../constants/ChatTypes';
+import { GET_MESSAGES_FAILURE, GET_MESSAGES_SUCCESS, GET_ROOM, GET_ROOMS, CREATE_ROOM, ADD_USER, CHANGE_NAME, SEND_MESSAGE, REMOVE_MESSAGE, REQUEST_CHANNEL, GET_MESSAGES, GET_ROOM_FAILURE, GET_ROOM_SUCCESS, GET_ROOMS_SUCCESS, GET_ROOMS_FAILURE, SEND_MESSAGE_FAILURE, SET_ROOM, SET_ROOM_FAILURE, SET_ROOM_SUCCESS, CREATE_ROOM_SUCCESS, CREATE_ROOM_FAILURE } from '../constants/ChatTypes';
 
 export const setRoom = (room) => {
     return {
@@ -84,6 +84,18 @@ export const createRoom = (titleAndCreator) => {
     return {
         type: CREATE_ROOM,
         payload: titleAndCreator
+    }
+}
+
+export const createRoomSuccess = () => {
+    return {
+        type: CREATE_ROOM_SUCCESS,
+    }
+}
+
+export const createRoomFailure = () => {
+    return {
+        type: CREATE_ROOM_FAILURE,
     }
 }
 

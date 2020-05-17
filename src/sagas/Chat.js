@@ -1,8 +1,8 @@
 import { all, fork, put, takeLatest, call } from 'redux-saga/effects';
 import axios from 'axios';
 
-import { GET_ROOM, GET_ROOMS, GET_MESSAGES, GET_MESSAGES_SUCCESS, GET_MESSAGES_FAILURE, SEND_MESSAGE, SEND_MESSAGE_FAILURE, GET_ROOMS_SUCCESS, GET_ROOMS_FAILURE, GET_ROOM_SUCCESS, GET_ROOM_FAILURE, SET_ROOM, SET_ROOM_FAILURE, SET_ROOM_SUCCESS } from '../constants/ChatTypes';
-import { getMessages as getMessagesAction, getMessagesSuccess, getMessagesFailure, getRoomSuccess, getRoomFailure, getRoomsSuccess, getRoomsFailure, sendMessageFailure, setRoomSuccess, setRoomFailure } from '../actions';
+import { CREATE_ROOM, CREATE_ROOM_SUCCESS, CREATE_ROOM_FAILURE, GET_ROOM, GET_ROOMS, GET_MESSAGES, GET_MESSAGES_SUCCESS, GET_MESSAGES_FAILURE, SEND_MESSAGE, SEND_MESSAGE_FAILURE, GET_ROOMS_SUCCESS, GET_ROOMS_FAILURE, GET_ROOM_SUCCESS, GET_ROOM_FAILURE, SET_ROOM, SET_ROOM_FAILURE, SET_ROOM_SUCCESS } from '../constants/ChatTypes';
+import { createRoomSuccess, createRoomFailure, getRooms as getRoomsAction, getMessages as getMessagesAction, getMessagesSuccess, getMessagesFailure, getRoomSuccess, getRoomFailure, getRoomsSuccess, getRoomsFailure, sendMessageFailure, setRoomSuccess, setRoomFailure } from '../actions';
 
 function getAxiosOpts(bearer) {
     return {
@@ -11,6 +11,33 @@ function getAxiosOpts(bearer) {
 }
 
 //TODO:: CREATE_ROOM, ADD_USER, CHANGE_NAME, REMOVE_MESSAGE, REQUEST_CHANNEL,
+
+function createRoomRequest(title, admin, bearer) {
+
+    return axios.post(`${process.env.REACT_APP_API_BASE}/createRoom`, {
+        title, admin
+    }, getAxiosOpts(bearer));
+}
+
+function* createRoom({ payload }) {
+
+    try {
+
+        const bearerToken = JSON.parse(localStorage.getItem('token')).data.data;
+        if (!bearerToken) {
+            throw new TypeError("No bearer token present, please renew login token")
+        }
+
+        yield call(createRoomRequest, payload.title, payload.username, bearerToken);
+
+        yield put(createRoomSuccess());
+
+    } catch(err) {
+        yield put(createRoomFailure());
+    } finally {
+        yield put(getRoomsAction(payload.username));
+    }
+}
 
 function sendMessageRequest(chatID, username, message, bearer) {
 
@@ -161,6 +188,16 @@ export function* watchSendMEssageFailure() {
     yield takeLatest(SEND_MESSAGE_FAILURE, sendMessageFailure);
 }
 
+export function* watchCreateRoom() {
+    yield takeLatest(CREATE_ROOM, createRoom);
+}
+export function* watchCreateRoomSuccess() {
+    yield takeLatest(CREATE_ROOM_SUCCESS, createRoomSuccess);
+}
+export function* watchCreateRoomFailure() {
+    yield takeLatest(CREATE_ROOM_FAILURE, createRoomFailure);
+}
+
 export default function* rootSaga() {
     yield all([
         fork(watchGetRoom),
@@ -177,5 +214,8 @@ export default function* rootSaga() {
         fork(watchSetRoom),
         fork(watchSetRoomSuccess),
         fork(watchSetRoomFailure),
+        fork(watchCreateRoom),
+        fork(watchCreateRoomSuccess),
+        fork(watchCreateRoomFailure),
     ]);
 }
