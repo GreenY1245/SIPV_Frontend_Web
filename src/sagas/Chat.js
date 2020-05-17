@@ -10,7 +10,7 @@ function getAxiosOpts(bearer) {
     };
 }
 
-//TODO:: CREATE_ROOM, ADD_USER, CHANGE_NAME, REMOVE_MESSAGE, REQUEST_CHANNEL,
+//TODO:: ADD_USER, CHANGE_NAME, REMOVE_MESSAGE, REQUEST_CHANNEL,
 
 function createRoomRequest(title, admin, bearer) {
 

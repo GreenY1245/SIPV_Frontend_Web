@@ -15,7 +15,7 @@ import HomePlusIcon from 'mdi-react/HomePlusIcon';
 import SearchIcon from '@material-ui/icons/Search';
 import MessageIcon from '@material-ui/icons/Message';
 import PoundIcon from 'mdi-react/PoundIcon';
-import { sendMessage, getMessages, getRooms, getRoom, setRoom, createRoom } from '../../../actions';
+import { sendMessage, getMessages, getRooms, getRoom, setRoom, createRoom, signOut } from '../../../actions';
 
 const styles = {
 
@@ -208,7 +208,7 @@ const Chat = (props) => {
 
                 <div className={props.classes.logout}>
                     <Tooltip title={"Sign out"}>
-                        <IconButton color="secondary">
+                        <IconButton color="secondary" onClick={() => {props.signOut()}}>
                             <LogoutIcon size={32} />
                         </IconButton>
                     </Tooltip>
@@ -329,6 +329,7 @@ const mapDispatchToProps = {
     getMessages,
     sendMessage,
     createRoom,
+    signOut,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Chat));

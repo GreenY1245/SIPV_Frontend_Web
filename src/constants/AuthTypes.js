@@ -7,3 +7,4 @@ export const REGISTER_SUCCESS = 'register_success';
 export const REGISTER_FAILURE = 'register_failure';
 
 export const SIGN_OUT = 'sign_out';
+export const SIGN_OUT_SUCCESS = 'sign_out_s';

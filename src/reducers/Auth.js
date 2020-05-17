@@ -1,4 +1,4 @@
-import { SIGN_IN, SIGN_IN_FAILURE, SIGN_IN_SUCCESS, SIGN_OUT, REGISTER, REGISTER_FAILURE, REGISTER_SUCCESS } from '../constants/AuthTypes';
+import { SIGN_IN, SIGN_IN_FAILURE, SIGN_IN_SUCCESS, SIGN_OUT, REGISTER, REGISTER_FAILURE, REGISTER_SUCCESS, SIGN_OUT_SUCCESS } from '../constants/AuthTypes';
 
 const INIT_STATE = {
     registered: false,
@@ -35,10 +35,18 @@ export default (state = INIT_STATE, action) => {
             }
 
         case SIGN_OUT:
-            localStorage.removeItem("token")
             return {
                 ...state,
+                loading: true,
+            }
+        
+        case SIGN_OUT_SUCCESS:
+            localStorage.removeItem("token");
+            return {
+                ...state,
+                loading: false,
                 token: null,
+                username: null,
             }
 
         case REGISTER:
